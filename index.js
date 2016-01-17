@@ -1,5 +1,3 @@
-#!/usr/bin/env node --harmony
-
 var fs              = require('fs');
 var util            = require('util');
 var AjaxRequest     = require('xhr2');
