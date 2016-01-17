@@ -33,7 +33,7 @@ module.exports = function Sitemap(siteURL, siteDistPath, dryRun) {
     {name:"Bing", URL: "www.bing.com"}
   ];
 
-  this.add = function(url, changeFreq, priority) {
+  this.add = function(url, changeFreq, priority, lastmod) {
 
     if(!changeFreq){
       changeFreq = "Daily";
@@ -43,11 +43,17 @@ module.exports = function Sitemap(siteURL, siteDistPath, dryRun) {
       priority = "0.5";
     }
 
-    this.pages.push({
+    var entry = {
       url: url,
       changeFreq: changeFreq,
       priority: priority
-    });
+    };
+
+    if (lastmod) {
+      entry.lastmod = (lastmod instanceof Date) ? lastmod.toISOString() : lastmod;
+    }
+
+    this.pages.push(entry);
 
     if (this.pages.length >= 50000) {
       this._flush();
@@ -125,6 +131,7 @@ module.exports = function Sitemap(siteURL, siteDistPath, dryRun) {
         '<loc>' + page.url + '</loc>',
         '<changefreq>' + page.changeFreq + '</changefreq>',
         '<priority>' + page.priority + '</priority>',
+        page.lastmod ? '<lastmod>' + page.lastmod + '</lastmod>' : '',
         '</url>',
       ].join('');
     });
